@@ -30,142 +30,148 @@
 
 <img width="1287" height="767" alt="image" src="https://github.com/user-attachments/assets/05c43e31-eb80-436a-b973-b019566a9e31" />
 
+
+<img width="1629" height="884" alt="image" src="https://github.com/user-attachments/assets/8fee3ea8-26db-4b3e-9ab0-e318fb334753" />
+
+
 # Synthetic Monitoring (the clean, Dynatrace-native way)
 
-This is the recommended approach.
+### This is the recommended approach.
 
-You’re not generating “fake users”, you’re creating a controlled synthetic probe.
+### You’re not generating “fake users”, you’re creating a controlled synthetic probe.
 
-What this gives you
+### What this gives you
 
-Availability (up/down)
+### Availability (up/down)
 
-Response time
+### Response time
 
-HTTP status codes
+### HTTP status codes
 
-Network timing (DNS, TCP, SSL)
+### Network timing (DNS, TCP, SSL)
 
-Visibility even when no real users exist
+### Visibility even when no real users exist
 
 ## Step-by-step in Dynatrace UI
 
-1. Log in to Dynatrace
+### 1. Log in to Dynatrace
 
-2. Go to Observe & Explore → Synthetic
+### 2. Go to Observe & Explore → Synthetic
 
-3. Click Create a synthetic monitor
+### 3. Click Create a synthetic monitor
 
-Choose HTTP monitor
+### Choose HTTP monitor
 
 ## Configure:
 
-URL: http://136.115.5.255/
+### URL: http://136.115.5.255/
 
-Name: Prod-IP-Availability-Test
+### Name: Prod-IP-Availability-Test
 
-Frequency: every 5 minutes (start slow)
+### Frequency: every 5 minutes (start slow)
 
-Locations: choose at least one public location
+### Locations: choose at least one public location
 
-Save and start the monitor
+### Save and start the monitor
 
-What to watch after it runs
+### What to watch after it runs
 
-In Dynatrace you’ll see:
+## In Dynatrace you’ll see:
 
-Availability %
+### Availability %
 
-Response time trends
+### Response time trends
 
-HTTP failures (4xx / 5xx)
+### HTTP failures (4xx / 5xx)
 
-Network breakdown
+### Network breakdown
 
-This is safe, auditable, and production-approved.
+### This is safe, auditable, and production-approved.
 
-Method B: Generate traffic from server + observe in Dynatrace
+## Method B: Generate traffic from server + observe in Dynatrace
 
-Use this only if:
+### Use this only if:
 
-OneAgent is installed on the server
+### OneAgent is installed on the server
 
-You want to see service flow / PurePath traces
+### You want to see service flow / PurePath traces
 
-From a Linux machine (controlled test)
+### From a Linux machine (controlled test)
+
+```bash
 ab -n 200 -c 10 http://136.115.5.255/
+```
 
+### Very small load. Enough to create traces.
 
-Very small load. Enough to create traces.
+### What you’ll see in Dynatrace
 
-What you’ll see in Dynatrace
+### If OneAgent is active:
 
-If OneAgent is active:
+### Service detected
 
-Service detected
+### Incoming requests
 
-Incoming requests
+### Response time
 
-Response time
+### CPU / memory correlation
 
-CPU / memory correlation
+### PurePath traces
 
-PurePath traces
+### If you see nothing, it means:
 
-If you see nothing, it means:
+### OneAgent not installed
 
-OneAgent not installed
+### Traffic not hitting an instrumented service
 
-Traffic not hitting an instrumented service
+### Firewall blocking
 
-Firewall blocking
+### Which method should you choose?
 
-Which method should you choose?
+## Use this rule:
 
-Use this rule:
+### ✅ Website availability / uptime → Synthetic Monitor
 
-✅ Website availability / uptime → Synthetic Monitor
+### ✅ App performance & code-level tracing → OneAgent + traffic
 
-✅ App performance & code-level tracing → OneAgent + traffic
+### ❌ Random traffic generators → never in production
 
-❌ Random traffic generators → never in production
+### Very important production rule
 
-Very important production rule
+## Do NOT:
 
-Do NOT:
+### Run high concurrency tests on a raw IP
 
-Run high concurrency tests on a raw IP
+### Spike traffic without approval
 
-Spike traffic without approval
+### Treat load testing as monitoring
 
-Treat load testing as monitoring
+### Synthetic monitoring ≠ load testing
+### Load testing ≠ monitoring
 
-Synthetic monitoring ≠ load testing
-Load testing ≠ monitoring
+### They answer different questions.
 
-They answer different questions.
+### Mental model (this matters in interviews)
 
-Mental model (this matters in interviews)
+### Synthetic monitoring asks:
+### “Is my system reachable and how fast from the outside?”
 
-Synthetic monitoring asks:
-“Is my system reachable and how fast from the outside?”
+## OneAgent tracing asks:
+### “What exactly happened inside my system when a request arrived?”
 
-OneAgent tracing asks:
-“What exactly happened inside my system when a request arrived?”
+### Dynatrace shines when you use both, deliberately.
 
-Dynatrace shines when you use both, deliberately.
+### Your next natural steps could be:
 
-Your next natural steps could be:
+### validating the synthetic results
 
-validating the synthetic results
+### mapping the IP to detected services
 
-mapping the IP to detected services
+### setting alert thresholds
 
-setting alert thresholds
+### correlating synthetic failures with host metrics
 
-correlating synthetic failures with host metrics
-
-That’s where observability stops being dashboards and starts being understanding.
+### That’s where observability stops being dashboards and starts being understanding.
 
 
 
